@@ -1,3 +1,66 @@
-<ion-app>
-  <ion-router-outlet></ion-router-outlet>
-</ion-app>
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{ title }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-label>{{ title }}</ion-label>
+      <ion-badge slot="end">{{tasks.length}}</ion-badge>
+    </ion-toolbar>
+  </ion-header>
+  <h2>A faire</h2>
+  <div class="ion-padding" id="list-toggle">
+    <ion-list>
+      <ion-item-sliding *ngFor="let task of tasks">
+        <ion-item >
+          <ion-text [class.done]="task.status">{{ task.title}}</ion-text>
+          <ion-toggle [checked]="task.status" aria-label="Enable Notifications" (ionChange)="saveTasks()" [(ngModel)]="task.status" ></ion-toggle>
+<!--          <ion-button class="delete-task" (ionSwipe)="deleteTask(task)"> <ion-icon slot="icon-only" name="close-outline"></ion-icon></ion-button>-->
+        </ion-item>
+        <ion-item-options side="end"  (ionSwipe)="deleteTask(task)" >
+          <ion-item-option color="danger" (click)="deleteTask(task)" expandable>
+          Supprimer
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+  </div>
+  <h2>Terminées</h2>
+  <div class="ion-padding">
+    <ion-list>
+      <ion-item>
+        <ion-label>Tâche 2</ion-label>
+      </ion-item>      <ion-item>
+      <ion-label>Tâche 3</ion-label>
+    </ion-item>
+    </ion-list>
+  </div>
+  <ion-button expand="block" (click)="setOpen(true)">Ajouter une tâche</ion-button>
+  <ion-modal [isOpen]="isModalOpen" class="ion-padding">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Modal</ion-title>
+          <ion-buttons slot="end">
+            <ion-button class="button-modal" (click)="setOpen(false)"> <ion-icon slot="icon-only" name="close-outline"></ion-icon></ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-input
+          type="text"
+          fill="solid"
+          label="Your Task"
+          labelPlacement="floating"
+          helperText="Enter you task"
+          errorText="Invalid email"
+          [(ngModel)]="task.title"
+          (ionBlur)="addTask()"
+          (keydown)="keyDetection($event.code)"
+        ></ion-input>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>
